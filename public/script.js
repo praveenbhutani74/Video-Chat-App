@@ -5,36 +5,76 @@ let MuteVideo=document.querySelector('.Stop-video');
 let Theme=document.getElementById('Theme');
 let ChatButton=document.getElementById('chat-btn');
 let right=document.getElementById('right');
-let leave=document.getElementById('leave');
+let leave=document.querySelector('.Leave-Btn');
 let ChatInput=document.querySelector(".chat-input");
 let MuteAudio=document.querySelector('.Stop-audio');
+let videoElement = document.querySelector("video");
 console.log(videoGrid);
+let recordButton=document.querySelector(".recordButton");
+let ShareScreen=document.querySelector('.Share-Screen');
 
-// let AudioVideo=document.getElementById('Audio-video');
-// let StopVideoDiv=document.querySelector('.Stop-Video-div')
 
-// let count=0;
+
 let myVideoStream;
+var currentPeer;
+let mediaRecorder;
+let recordingState = false;
 const myPeer = new Peer()
 
+
 const myVideo = document.createElement('video')
+myVideo.controls=true;
 myVideo.muted = true
 
 const peers = {}
-navigator.mediaDevices.getUserMedia({
+  navigator.mediaDevices.getUserMedia({
   video: true,
   audio: true
 }).then(stream => {
   myVideoStream = stream;
+  // videoElement.srcObject = stream;
+  mediaRecorder = new MediaRecorder(stream);
+
+  mediaRecorder.onstart = function () {
+    console.log("Inside me start");
+}
+mediaRecorder.ondataavailable = function (e) {
+    console.log("Inside on data available");
+
+    console.log(e);
+
+    let videoObj = new Blob([e.data], { type: "video/mp4" })
+    console.log(videoObj);
+    let videoUrl = URL.createObjectURL(videoObj);
+
+    let aTag = document.createElement("a");
+
+    aTag.download = `Vidoe${Date.now()}.mp4`;
+    aTag.href = videoUrl;
+    aTag.click();
+   
+
+
+};
+
+mediaRecorder.onstop = function () {
+
+    console.log("Inside on stop");
+
+}
+recordButton.addEventListener("click", RecordingOnClick);
   addVideoStream(myVideo, stream)
 
   myPeer.on('call', call => {
     call.answer(stream)
     const video = document.createElement('video')
-    call.on('stream', userVideoStream => {
-      addVideoStream(video, userVideoStream)
+    call.on('stream', userVideoStream => {   
+      addVideoStream(video, userVideoStream);
+      currentPeer=call;
     })
+    
   })
+ 
 
   socket.on('user-connected', userId => {
    
@@ -57,9 +97,13 @@ myPeer.on('open', id => {
 function connectToNewUser(userId, stream) {
   const call = myPeer.call(userId, stream)
   const video = document.createElement('video')
+  video.controls=true;
   call.on('stream', userVideoStream => {
-    addVideoStream(video, userVideoStream)
+    addVideoStream(video, userVideoStream);
+    currentPeer=call;
+
   })
+  
   call.on('close', () => {
     video.remove()
   })
@@ -79,7 +123,7 @@ function addVideoStream(video, stream) {
 
 console.log(myVideoStream);
   MuteVideo.addEventListener("click",function(){
-  console.log(myVideoStream);
+  
   let enabled = myVideoStream.getVideoTracks()[0].enabled;
   if(enabled||MuteVideo.innerHTML==="Stop"){
       myVideoStream.getVideoTracks()[0].enabled = false;
@@ -171,20 +215,80 @@ ChatInput.addEventListener("keypress",function(e){
 
 })
 
+leave.addEventListener("click",function(e){
 
-// StopVideo.addEventListener("click",function(){
+  console.log(e);
+});
+  
+// leave.addEventListener("keypress",function(e){
 
-
-//   console.log(StopVideo.innerHTML);
-    
-     
-//       return StopVideo.innerText === "Stop" ? "Start" : "Stop";
-   
-
-
-// })
-
-// StopVideoDiv.addEventListener("click",function(){
+//   console.log(e);
+// });
+  
+ShareScreen.addEventListener("click",function(e){
 
   
+  navigator.mediaDevices.getDisplayMedia({
+    video:{
+      cursor:"always"
+    },audio:{
+      echoCancellation:true,
+      noiseSuppression:true
+    }
+  }).then((stream)=>{
+    let videoTrack = stream.getVideoTracks()[0];
+    
+    let sender = currentPeer.peerConnection.getSenders().find(function (s) {
+      console.log(s);
+      return s.track.kind == videoTrack.kind;
+  })
+  sender.replaceTrack(videoTrack)
 
+
+
+  }).catch((err) =>{
+
+
+    console.log("err"+err);
+  })
+  
+});
+
+
+function RecordingOnClick () {
+
+  if (recordingState) {
+      mediaRecorder.stop();
+
+      recordingState = false;
+      
+      document.querySelector(".recording").innerHTML="";
+      recordButton.innerHTML=` <div class="recordButton">
+      <span class="Stop">Record</span>
+      <i class="fas fa-record-vinyl"></i>
+    </div>`
+  }
+  else {
+
+      mediaRecorder.start();
+
+      recordingState = true;
+      document.querySelector(".recording").innerHTML=`
+      <div class="recordButtononClick">
+     
+      <i class="fas fa-stop-circle"></i>
+      <span class="Stop">Recording</span>
+    </div>
+      
+      `;
+      
+      recordButton.innerHTML=`
+      <div class="recordButton">
+      <span class="Stop">Stop Recording</span>
+      <i class="fas fa-stop-circle"></i>
+    </div>
+      
+      `
+
+  }
+}

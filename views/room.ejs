@@ -178,6 +178,7 @@
           align-items: center;
           padding: 15px;
           opacity: 0.8;
+          cursor: pointer;
         }
         .Stop-audio{
           display: flex;
@@ -188,26 +189,40 @@
           align-items: center;
           padding: 20px;
           opacity: 0.8;
+          cursor: pointer;
         }
         .Stop-audio:hover{
           background-color:rgb(121, 115, 115);
           opacity: 1;
-          border: 3px dotted #ff7a59;
+          
+
+          
 
         transition: all 0.4s ease 0s;
+        cursor: pointer;
+        border-radius: 10px;
         }
         .Stop-video:hover{
           background-color:rgb(121, 115, 115);
           opacity: 1;
-          border: 3px dotted #ff7a59;
+       
 
         transition: all 0.4s ease 0s;
+        cursor: pointer;
+        border-radius: 10px;
         }
         .Stop-audio i{
 
           margin-left: 2px;
         }
+        .recording{
 
+          height:1%;
+          width: 1%;
+          position: absolute;
+          top: 0%;
+          left: 0%;
+        }
 
 .inside-stop{
   position: absolute;
@@ -220,18 +235,19 @@
 
 .Stop{
 
-  font-size: 0.9rem;
+  font-size: 0.8rem;
  
 }
 .Stop-Audio{
 
   font-size: 0.8rem;
+  cursor: pointer;
 
 
 }
 #middle{
           display: flex;
-          justify-content: space-evenly; 
+          justify-content: center; 
            align-items: center; 
            width: 33%;
            height: 100%;
@@ -240,23 +256,107 @@
 
         #chat-btn {
 
-          color: rgb(180, 176, 176);
           display: flex;
-          justify-content: center;
+          flex-direction: column-reverse;
+
+          color: #fff;
+          font-size: 33px;
           align-items: center;
-          font-size: 35px;
-          width: 13.6%;
-          height: 100%;
+          padding: 15px;
           opacity: 0.8;
+          cursor: pointer;
+          border-radius: 10px;
         }
 
         #chat-btn:hover{
 
           background-color:rgb(121, 115, 115);
-          border: 3px dotted #ff7a59;
+          
           opacity: 1;
         transition: all 0.4s ease 0s;
+        cursor: pointer;
+          
+          border-radius: 10px;
         }
+        #end{
+
+
+display: flex;
+ justify-content: flex-end;
+ /* position: absolute; */
+    
+ align-items: center;
+ /* margin-top: -20px; */
+ width: 34%;
+ height: 100%;
+ /* left: 5%; */
+}
+
+.recordButtononClick{
+
+  display: flex;
+        
+
+          color:tomato;
+          font-size: 10px;
+          align-items: center;
+          padding: 15px;
+          opacity: 0.8;
+          cursor: pointer;
+
+}
+
+.Leave-Btn{
+  width: 15%;
+  height: 50%;
+  background-color: tomato;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50px;
+  cursor: pointer;
+  color: #fff;
+  
+}
+.Share-Screen{
+  display: flex;
+          flex-direction: column-reverse;
+
+          color: rgb(170, 255, 0);
+          font-size: 33px;
+          align-items: center;
+          padding: 15px;
+          opacity: 0.8;
+          cursor: pointer;
+}
+.recordButton{
+  display: flex;
+          flex-direction: column-reverse;
+
+          color: #fff;
+          font-size: 33px;
+          align-items: center;
+          padding: 15px;
+          opacity: 0.8;
+          cursor: pointer;
+
+}
+.Share-Screen:hover{
+  background-color:rgb(121, 115, 115);
+          
+          opacity: 1;
+        transition: all 0.4s ease 0s;
+        cursor: pointer;
+        border-radius: 10px;
+}
+.recordButton:hover{
+  background-color:rgb(121, 115, 115);
+          
+          opacity: 1;
+        transition: all 0.4s ease 0s;
+        cursor: pointer;
+        border-radius: 10px;
+}
            </style>
 </head>
 
@@ -266,7 +366,9 @@
   </header>
   <div class="main">
   <div class="left">
+    <div class="recording"></div>
     <div id="video-grid"></div>
+  
     
     <div id="Bottom">
 
@@ -293,11 +395,23 @@
    
     <div id="middle">
       <div id="chat-btn">
+        <span class="Stop">chat</span>
         <i class="fas fa-comment-alt"></i>
+        
       </div>
+     
+      <div class="Share-Screen">
+        <span class="Stop">Share Screen</span>
+        <i class="fas fa-share-alt-square"></i>
+      </div>
+      
+    <div class="recordButton">
+      <span class="Stop">Record</span>
+      <i class="fas fa-record-vinyl"></i>
+    </div>
     </div>
     <div id="end">
-     <button id="leave">Leave</button>
+     <div class="Leave-Btn">Leave </div>
      
     </div>
     </div>
