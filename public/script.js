@@ -14,12 +14,14 @@ let recordButton=document.querySelector(".recordButton");
 let ShareScreen=document.querySelector('.Share-Screen');
 
 
-
 let myVideoStream;
 var currentPeer;
 let mediaRecorder;
 let recordingState = false;
 const myPeer = new Peer()
+
+var today = new Date();
+let time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
 
 
 const myVideo = document.createElement('video')
@@ -81,6 +83,17 @@ recordButton.addEventListener("click", RecordingOnClick);
     connectToNewUser(userId, stream)
    
   })
+})
+
+socket.on("chatLeft",function(chatValue){
+
+  let chatDiv = document.createElement("div");
+  chatDiv.classList.add("chat");
+  chatDiv.classList.add("left-div");
+  chatDiv.textContent = chatValue.chat;
+  right.append(chatDiv);
+
+
 })
 
 socket.on('user-disconnected', userId => {
@@ -207,8 +220,9 @@ ChatInput.addEventListener("keypress",function(e){
     let chatDiv = document.createElement("div");
     chatDiv.classList.add("chat");
     chatDiv.classList.add("right-div");
-    chatDiv.textContent = ChatInput.value;
+    chatDiv.textContent = ChatInput.value+" :"+time;
     right.append(chatDiv);
+    socket.emit("chat",{chat:ChatInput.value});
     ChatInput.value = "";
   }
 
