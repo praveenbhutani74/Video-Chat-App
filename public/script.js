@@ -1,35 +1,36 @@
-const socket = io('/')
+const socket = io('/');
 const videoGrid = document.getElementById('video-grid')
-let Mymodal=document.querySelector('modal');
-let MuteVideo=document.querySelector('.Stop-video');
-let Theme=document.getElementById('Theme');
-let ChatButton=document.getElementById('chat-btn');
-let right=document.getElementById('right');
-let leave=document.querySelector('.Leave-Btn');
-let ChatInput=document.querySelector(".chat-input");
-let MuteAudio=document.querySelector('.Stop-audio');
+let Mymodal = document.querySelector('modal');
+let MuteVideo = document.querySelector('.Stop-video');
+let Theme = document.getElementById('Theme');
+let ChatButton = document.getElementById('chat-btn');
+let right = document.getElementById('right');
+let leave = document.querySelector('.Leave-Btn');
+let ChatInput = document.querySelector(".chat-input");
+let MuteAudio = document.querySelector('.Stop-audio');
 let videoElement = document.querySelector("video");
 console.log(videoGrid);
-let recordButton=document.querySelector(".recordButton");
-let ShareScreen=document.querySelector('.Share-Screen');
+let recordButton = document.querySelector(".recordButton");
+let ShareScreen = document.querySelector('.Share-Screen');
 
 
 let myVideoStream;
 var currentPeer;
 let mediaRecorder;
+let videoTrack;
 let recordingState = false;
 const myPeer = new Peer()
 
-var today = new Date();
-let time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+
 
 
 const myVideo = document.createElement('video')
-myVideo.controls=true;
-myVideo.muted = true
+myVideo.controls = true;
+myVideo.muted = true;
+
 
 const peers = {}
-  navigator.mediaDevices.getUserMedia({
+navigator.mediaDevices.getUserMedia({
   video: true,
   audio: true
 }).then(stream => {
@@ -39,8 +40,8 @@ const peers = {}
 
   mediaRecorder.onstart = function () {
     console.log("Inside me start");
-}
-mediaRecorder.ondataavailable = function (e) {
+  }
+  mediaRecorder.ondataavailable = function (e) {
     console.log("Inside on data available");
 
     console.log(e);
@@ -54,38 +55,38 @@ mediaRecorder.ondataavailable = function (e) {
     aTag.download = `Vidoe${Date.now()}.mp4`;
     aTag.href = videoUrl;
     aTag.click();
-   
 
 
-};
 
-mediaRecorder.onstop = function () {
+  };
+
+  mediaRecorder.onstop = function () {
 
     console.log("Inside on stop");
 
-}
-recordButton.addEventListener("click", RecordingOnClick);
+  }
+  recordButton.addEventListener("click", RecordingOnClick);
   addVideoStream(myVideo, stream)
 
   myPeer.on('call', call => {
     call.answer(stream)
     const video = document.createElement('video')
-    call.on('stream', userVideoStream => {   
+    call.on('stream', userVideoStream => {
       addVideoStream(video, userVideoStream);
-      currentPeer=call;
+      currentPeer = call;
     })
-    
+
   })
- 
+
 
   socket.on('user-connected', userId => {
-   
+
     connectToNewUser(userId, stream)
-   
+
   })
 })
 
-socket.on("chatLeft",function(chatValue){
+socket.on("chatLeft", function (chatValue) {
 
   let chatDiv = document.createElement("div");
   chatDiv.classList.add("chat");
@@ -110,13 +111,13 @@ myPeer.on('open', id => {
 function connectToNewUser(userId, stream) {
   const call = myPeer.call(userId, stream)
   const video = document.createElement('video')
-  video.controls=true;
+  video.controls = true;
   call.on('stream', userVideoStream => {
     addVideoStream(video, userVideoStream);
-    currentPeer=call;
+    currentPeer = call;
 
   })
-  
+
   call.on('close', () => {
     video.remove()
   })
@@ -135,159 +136,160 @@ function addVideoStream(video, stream) {
 
 
 console.log(myVideoStream);
-  MuteVideo.addEventListener("click",function(){
-  
+MuteVideo.addEventListener("click", function () {
+
   let enabled = myVideoStream.getVideoTracks()[0].enabled;
-  if(enabled||MuteVideo.innerHTML==="Stop"){
-      myVideoStream.getVideoTracks()[0].enabled = false;
-      StartVideoBtn();
+  if (enabled || MuteVideo.innerHTML === "Stop") {
+    myVideoStream.getVideoTracks()[0].enabled = false;
+    StartVideoBtn();
   }
   else {
-     
-      myVideoStream.getVideoTracks()[0].enabled = true;
-      StopVideoBtn();
-      }
-  
+
+    myVideoStream.getVideoTracks()[0].enabled = true;
+    StopVideoBtn();
+  }
+
 })
-MuteAudio.addEventListener("click",function(){
+MuteAudio.addEventListener("click", function () {
   console.log(myVideoStream);
   let enabled = myVideoStream.getAudioTracks()[0].enabled;
-  if(enabled||MuteVideo.innerHTML==="Stop"){
-      myVideoStream.getAudioTracks()[0].enabled = false;
-     StartAudioBtn();
+  if (enabled || MuteVideo.innerHTML === "Stop") {
+    myVideoStream.getAudioTracks()[0].enabled = false;
+    StartAudioBtn();
   }
   else {
-     
-      myVideoStream.getAudioTracks()[0].enabled = true;
-     StopAudioBtn();
-      }
-  
+
+    myVideoStream.getAudioTracks()[0].enabled = true;
+    StopAudioBtn();
+  }
+
 })
 
-   function StartAudioBtn(){
-     document.querySelector("video").style.border="3px solid red";
+function StartAudioBtn() {
+  document.querySelector("video").style.border = "3px solid red";
 
-   
-    MuteAudio.innerHTML=`<span class="Stop-Audio">Unmute</span>
+
+  MuteAudio.innerHTML = `<span class="Stop-Audio">Unmute</span>
     <i class="fas fa-microphone-slash"></i>
     `;
-   }
-   function StopAudioBtn(){
-    document.querySelector("video").style.border="3px solid black";
+}
+function StopAudioBtn() {
+  document.querySelector("video").style.border = "3px solid black";
 
-    
-    MuteAudio.innerHTML=`<span class="Stop">Mute  </span>
+
+  MuteAudio.innerHTML = `<span class="Stop">Mute  </span>
     <i class="fas fa-microphone"></i>
     `;
-   }
+}
 
-   function StartVideoBtn(){
+function StartVideoBtn() {
 
-    MuteVideo.innerHTML=`<span class="Stop">Start Video</span>
+  MuteVideo.innerHTML = `<span class="Stop">Start Video</span>
     <i class="fas fa-video-slash"></i> 
 
     `;
-   }
-   function StopVideoBtn(){
+}
+function StopVideoBtn() {
 
-    MuteVideo.innerHTML=`<span class="Stop">Stop Video</span>
+  MuteVideo.innerHTML = `<span class="Stop">Stop Video</span>
     <i class="fas fa-video"></i>
     `;
-   }
+}
 
 
 
-  var content = document.getElementsByTagName('body')[0];
-  var darkMode = document.getElementById('dark-change');
-  darkMode.addEventListener('click', function(){
-      darkMode.classList.toggle('active');
-      content.classList.toggle('night');
+var content = document.getElementsByTagName('body')[0];
+var darkMode = document.getElementById('dark-change');
+darkMode.addEventListener('click', function () {
+  darkMode.classList.toggle('active');
+  content.classList.toggle('night');
 })
 
-ChatButton.addEventListener("click",function(){
+ChatButton.addEventListener("click", function () {
 
 
-  right.style.display=="none"?right.style.display="block":right.style.display="none";
+  right.style.display == "none" ? right.style.display = "block" : right.style.display = "none";
 
 })
 
 
 
-ChatInput.addEventListener("keypress",function(e){
-  if(e.key=="Enter"){
+ChatInput.addEventListener("keypress", function (e) {
+  if (e.key == "Enter") {
     console.log(e.key);
 
     let chatDiv = document.createElement("div");
     chatDiv.classList.add("chat");
     chatDiv.classList.add("right-div");
-    chatDiv.textContent = ChatInput.value+" :"+time;
+    chatDiv.textContent = ChatInput.value;
     right.append(chatDiv);
-    socket.emit("chat",{chat:ChatInput.value});
+    socket.emit("chat", { chat: ChatInput.value });
     ChatInput.value = "";
   }
 
 
 })
 
-leave.addEventListener("click",function(e){
+leave.addEventListener("click", function (e) {
 
   console.log(e);
 });
-  
+
 // leave.addEventListener("keypress",function(e){
 
 //   console.log(e);
 // });
-  
-ShareScreen.addEventListener("click",function(e){
 
-  
+ShareScreen.addEventListener("click", function (e) {
+
+
   navigator.mediaDevices.getDisplayMedia({
-    video:{
-      cursor:"always"
-    },audio:{
-      echoCancellation:true,
-      noiseSuppression:true
+    video: {
+      cursor: "always"
+    }, audio: {
+      echoCancellation: true,
+      noiseSuppression: true
     }
-  }).then((stream)=>{
-    let videoTrack = stream.getVideoTracks()[0];
-    
+  }).then((stream) => {
+    videoTrack = stream.getVideoTracks()[0];
+    console.log(videoTrack);
     let sender = currentPeer.peerConnection.getSenders().find(function (s) {
       console.log(s);
       return s.track.kind == videoTrack.kind;
+    })
+    sender.replaceTrack(videoTrack);
+
+
+
+
+  }).catch((err) => {
+
+
+    console.log("err" + err);
   })
-  sender.replaceTrack(videoTrack)
 
-
-
-  }).catch((err) =>{
-
-
-    console.log("err"+err);
-  })
-  
 });
 
 
-function RecordingOnClick () {
+function RecordingOnClick() {
 
   if (recordingState) {
-      mediaRecorder.stop();
+    mediaRecorder.stop();
 
-      recordingState = false;
-      
-      document.querySelector(".recording").innerHTML="";
-      recordButton.innerHTML=` <div class="recordButton">
+    recordingState = false;
+
+    document.querySelector(".recording").innerHTML = "";
+    recordButton.innerHTML = ` <div class="recordButton">
       <span class="Stop">Record</span>
       <i class="fas fa-record-vinyl"></i>
     </div>`
   }
   else {
 
-      mediaRecorder.start();
+    mediaRecorder.start();
 
-      recordingState = true;
-      document.querySelector(".recording").innerHTML=`
+    recordingState = true;
+    document.querySelector(".recording").innerHTML = `
       <div class="recordButtononClick">
      
       <i class="fas fa-stop-circle"></i>
@@ -295,8 +297,8 @@ function RecordingOnClick () {
     </div>
       
       `;
-      
-      recordButton.innerHTML=`
+
+    recordButton.innerHTML = `
       <div class="recordButton">
       <span class="Stop">Stop Recording</span>
       <i class="fas fa-stop-circle"></i>

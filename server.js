@@ -4,12 +4,9 @@ const server = require('http').Server(app)
 const io = require('socket.io')(server)
 const { v4: uuidV4 } = require('uuid');
 const path = require('path');
-const cors = require('cors');
 
 
-app.use(cors());
 
-let count=1;
 
 
 app.set('view engine', 'ejs')
@@ -39,6 +36,4 @@ io.on('connection', socket => {
 })
 
 
-server.listen(5500,function(){
-  console.log("done");
-});
+server.listen(process.env.PORT || 3000);
