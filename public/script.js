@@ -21,6 +21,7 @@ let videoTrack;
 let recordingState = false;
 const myPeer = new Peer()
 
+socket.emit("userConnected",username);
 
 
 
@@ -322,5 +323,19 @@ document.querySelector(".copy").addEventListener("click",function(){
   copyText.select();
 
   document.execCommand("copy");
-  alert("Copied the text: " + copyText.value);
+  alert("Copied the Meeting Link: " + copyText.value);
+})
+
+socket.on("online-list", function(userList){
+
+  let ParticipantDiv=document.createElement("div");
+  ParticipantDiv.classList.add("participant-div");
+  ParticipantDiv.innerHTML=`
+  <span class="Number">${userList.length}</span>
+  <span class="Stop">Participants</span>
+  <i class="fas fa-user-friends"></i>
+  `
+  document.querySelector("#middle ").append(ParticipantDiv);
+
+
 })

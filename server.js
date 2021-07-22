@@ -7,7 +7,7 @@ const path = require('path');
 
 
 
-
+let userList=[];
 
 app.set('view engine', 'ejs')
 app.use(express.static(path.join(__dirname, 'public')));
@@ -25,6 +25,10 @@ io.on('connection', socket => {
   socket.on('join-room', (roomId, userId) => {
     socket.join(roomId)
     socket.to(roomId).emit('user-connected', userId)
+    userList.push(userId);
+    socket.emit("online-list",userList);
+    console.log(userList);
+   
     socket.on("chat",function(chatValue){
       socket.to(roomId).emit("chatLeft",chatValue);
     })
@@ -34,6 +38,5 @@ io.on('connection', socket => {
     })
   })
 })
-
 
 server.listen(process.env.PORT || 3000);
