@@ -12,7 +12,7 @@ let videoElement = document.querySelector("video");
 console.log(videoGrid);
 let recordButton = document.querySelector(".recordButton");
 let ShareScreen = document.querySelector('.Share-Screen');
-
+let username = prompt("Enter Your Name ");
 
 let myVideoStream;
 var currentPeer;
@@ -91,7 +91,7 @@ socket.on("chatLeft", function (chatValue) {
   let chatDiv = document.createElement("div");
   chatDiv.classList.add("chat");
   chatDiv.classList.add("left-div");
-  chatDiv.textContent = chatValue.chat;
+  chatDiv.textContent = chatValue.username+":-"+chatValue.chat;
   right.append(chatDiv);
 
 
@@ -222,9 +222,9 @@ ChatInput.addEventListener("keypress", function (e) {
     let chatDiv = document.createElement("div");
     chatDiv.classList.add("chat");
     chatDiv.classList.add("right-div");
-    chatDiv.textContent = ChatInput.value;
+    chatDiv.textContent = username+": "+ChatInput.value;
     right.append(chatDiv);
-    socket.emit("chat", { chat: ChatInput.value });
+    socket.emit("chat", { username,chat: ChatInput.value });
     ChatInput.value = "";
   }
 
