@@ -25,7 +25,7 @@ const myPeer = new Peer()
 
 
 const myVideo = document.createElement('video')
-myVideo.controls = true;
+// myVideo.controls = true;
 myVideo.muted = true;
 
 
@@ -130,6 +130,7 @@ function addVideoStream(video, stream) {
   video.addEventListener('loadedmetadata', () => {
     video.play()
   })
+  
   videoGrid.append(video)
 }
 
@@ -308,3 +309,18 @@ function RecordingOnClick() {
 
   }
 }
+
+
+
+let id=document.getElementById('myInput').value = window.location.href;
+console.log(id);
+
+
+document.querySelector(".copy").addEventListener("click",function(){
+
+  var copyText = document.getElementById("myInput");
+  copyText.select();
+
+  document.execCommand("copy");
+  alert("Copied the text: " + copyText.value);
+})
