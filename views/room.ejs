@@ -387,7 +387,10 @@ margin-left: -10px;
       
       cursor: pointer;
     }
-
+    .chat-input-box{
+      height: 5%;
+      width: 100%;
+    }
     .Share-Screen:hover {
       background-color: rgb(121, 115, 115);
 
@@ -409,13 +412,13 @@ margin-left: -10px;
 
 position: absolute;
 bottom: 2.9%;
-height: 2.5%;
-width: 75%;
+height: 2.3%;
+width: 70%;
 /* display: flex;
     justify-content: center;
     align-items: center; */
 border-radius: 50px;
-left: 10%;
+left: 11%;
 outline: none;
 border: none;
 font-size: 1rem;
@@ -426,10 +429,14 @@ background-color: lightgrey;
 }
 .text{
   position: absolute;
-  bottom: 3%;
-  left: 1.6%;
-  font-size: 22px;
+  bottom: 7%;
+  left: 2.6%;
+ /* background: bisque; */
+  /* font-size: 35px; */
   margin-top: -20px;
+  font-size: 24px;
+  height: 4px;
+  width: 80px;
 }
 
   .participant-div{
@@ -567,7 +574,7 @@ background-color: lightgrey;
     picker.on('emoji',function(emoji){
         input.value+=emoji;
     })
-    input1.addEventListener('click',function(){
+    input1.addEventListener("click",function(){
         picker.pickerVisible ? picker.hidePicker():picker.showPicker(input);
     })
 
