@@ -43,6 +43,15 @@ io.on('connection', socket => {
 
     socket.on('disconnect', () => {
       socket.to(roomId).emit('user-disconnected', userId)
+      let LeftUserObj;
+      let remainingUsers=userList.filter(function(userObject){
+          if(userObject.id==socket.id){
+              LeftUserObj=userObject;
+              return false;
+          }
+          return true;
+      })
+      userList=remainingUsers;
     })
   })
 })
