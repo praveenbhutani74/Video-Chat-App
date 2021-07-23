@@ -25,13 +25,14 @@ io.on('connection', socket => {
   socket.on("user",function(username){
     let userObject={id:socket.id,username:username};
     userList.push(userObject);
-    socket.emit("online-list",userList);
+     socket.emit("online-list",userList);
+   
 
   })
   socket.on('join-room', (roomId, userId) => {
     socket.join(roomId)
     socket.to(roomId).emit('user-connected', userId)
-
+   
 
    
     console.log(userList);
