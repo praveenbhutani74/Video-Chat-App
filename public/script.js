@@ -12,7 +12,8 @@ let videoElement = document.querySelector("video");
 console.log(videoGrid);
 let recordButton = document.querySelector(".recordButton");
 let ShareScreen = document.querySelector('.Share-Screen');
-let username = prompt("Enter Your Name ");
+let username=prompt("Enter Your Name");
+
 
 let myVideoStream;
 var currentPeer;
@@ -20,8 +21,10 @@ let mediaRecorder;
 let videoTrack;
 let recordingState = false;
 const myPeer = new Peer()
+let ParticipantDiv;
+let UserName
 
-socket.emit("userConnected",username);
+socket.emit("user",username);
 
 
 
@@ -328,7 +331,8 @@ document.querySelector(".copy").addEventListener("click",function(){
 
 socket.on("online-list", function(userList){
 
-  let ParticipantDiv=document.createElement("div");
+  console.log(userList);
+   ParticipantDiv=document.createElement("div");
   ParticipantDiv.classList.add("participant-div");
   ParticipantDiv.innerHTML=`
   <span class="Number">${userList.length}</span>
@@ -337,5 +341,28 @@ socket.on("online-list", function(userList){
   `
   document.querySelector("#middle ").append(ParticipantDiv);
 
+ParticipantDiv.addEventListener("click",function(){
+
+ 
+UserName=document.createElement("div");
+UserName.classList.add("list");
+UserName.innerHTML=`
+<div class ="user-name" > ${userList[0].username }<div> 
+
+`
+
+document.querySelector(".main").append(UserName);
+
+  
+
+})
+ParticipantDiv.addEventListener("click",function(){
+
+ 
+ ParticipantDiv.display="none";
+  
+    
+  
+  })
 
 })

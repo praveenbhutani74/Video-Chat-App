@@ -22,15 +22,22 @@ app.get('/:room', (req, res) => {
 })
 
 io.on('connection', socket => {
+  socket.on("user",function(username){
+    let userObject={id:socket.id,username:username};
+    userList.push(userObject);
+    socket.emit("online-list",userList);
+
+  })
   socket.on('join-room', (roomId, userId) => {
     socket.join(roomId)
     socket.to(roomId).emit('user-connected', userId)
-    userList.push(userId);
-    socket.emit("online-list",userList);
-    console.log(userList);
+
+
    
+    console.log(userList);
     socket.on("chat",function(chatValue){
       socket.to(roomId).emit("chatLeft",chatValue);
+     
     })
 
     socket.on('disconnect', () => {
