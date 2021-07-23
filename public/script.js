@@ -257,15 +257,24 @@ ShareScreen.addEventListener("click", function (e) {
       noiseSuppression: true
     }
   }).then((stream) => {
+    const video = document.createElement('video')
+    video.srcObject = stream
+    video.onloadedmetadata = () => {
+        video.play()
+    }
     videoTrack = stream.getVideoTracks()[0];
+   
+
     console.log(videoTrack);
     let sender = currentPeer.peerConnection.getSenders().find(function (s) {
       console.log(s);
       return s.track.kind == videoTrack.kind;
     })
     sender.replaceTrack(videoTrack);
-
-
+    ShareScreen.disabled = true
+    stream.getVideoTracks()[0].onended = () => {
+      stopScreenShare()
+  }
 
 
   }).catch((err) => {
@@ -277,6 +286,15 @@ ShareScreen.addEventListener("click", function (e) {
 });
 
 
+function stopScreenShare() {
+  let videoTracks = myVideoStream.getVideoTracks()[0];
+  console.log(videoTracks);
+  let sender = currentPeer.peerConnection.getSenders().find(function(e){
+      return e.track.kind == videoTracks.kind;
+  });
+  sender.replaceTrack(videoTracks);
+  
+}
 function RecordingOnClick() {
 
   if (recordingState) {

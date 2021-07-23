@@ -35,7 +35,7 @@ io.on('connection', socket => {
    
 
    
-    console.log(userList);
+
     socket.on("chat",function(chatValue){
       socket.to(roomId).emit("chatLeft",chatValue);
      
@@ -56,4 +56,4 @@ io.on('connection', socket => {
   })
 })
 
-server.listen(process.env.PORT || 3000);
+server.listen(process.env.PORT || 5500);
